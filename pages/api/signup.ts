@@ -65,7 +65,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  return res.status(200).json({
+  return res.status(201).json({
     data: newUser,
     error: null,
   });
