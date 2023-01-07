@@ -1,14 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { prisma } from "@/lib/prisma";
 import { supabase } from "@/lib/supabase";
 import { sendSuccess } from "@/lib/response";
 
-const schemaSignUp = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
+const schemaSignIn = z.object({
+  email: z.string(),
+  password: z.string(),
 });
 
 const allowedMethods = ["POST"];
@@ -37,9 +34,9 @@ export default async function handler(
   }
 }
 
-// Create a new user account
+// Sign in a user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const response = schemaSignUp.safeParse(req.body);
+  const response = schemaSignIn.safeParse(req.body);
 
   if (!response.success) {
     return res.status(400).json({
@@ -48,20 +45,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const { email, firstName, lastName, password } = response.data;
+  const { email, password } = response.data;
 
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email: response.data.email,
-    },
-  });
-
-  if (existingUser) {
-    throw new Error("An user with this email already exists.");
-  }
-
-  // Create a new user in Supabase
-  const { error } = await supabase.auth.signUp({
+  // Sign in the user in Supabase
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -70,14 +57,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error(error.message);
   }
 
-  // Create a user in our database
-  const newUser = await prisma.user.create({
-    data: {
-      email,
-      firstName,
-      lastName,
-    },
-  });
-
-  return sendSuccess(res, 201, newUser);
+  return sendSuccess(res, 200, data);
 };
