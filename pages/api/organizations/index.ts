@@ -48,13 +48,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { name, slug, website, logo } = response.data;
 
-  const existingOrganization = await prisma.organization.findUnique({
+  const existingOrganization = await prisma.organization.count({
     where: {
       slug,
     },
   });
 
-  if (existingOrganization) {
+  if (existingOrganization > 0) {
     throw new Error("Organization already exists");
   }
 
