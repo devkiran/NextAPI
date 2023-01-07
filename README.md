@@ -6,7 +6,12 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 
 ## Features
 
-- [ ] Sign up
-- [ ] Sign in
-- [ ] Create organization
-- [ ] Get organizations a user belongs to
+- Create organization
+- Get organizations a user belongs to
+- Format the Zod error object to frontend friendly error object
+- Send email
+- Document the APIs
+
+- A user can create an organization
+- Organization slug must be unique
+- Get organizations a user belongs to
