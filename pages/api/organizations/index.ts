@@ -14,8 +14,10 @@ export default async function handler(
     switch (method) {
       case "POST":
         return await handlePOST(req, res);
+      case "GET":
+        return await handleGET(req, res);
       default:
-        res.setHeader("Allow", "POST");
+        res.setHeader("Allow", "POST, GET");
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
@@ -77,6 +79,26 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res.status(201).json({
     data: newOrganization,
+    error: null,
+  });
+};
+
+// Get all organizations for the current user
+const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
+  const currentUser = await getCurrentUser(req);
+
+  const organizations = await prisma.organization.findMany({
+    where: {
+      members: {
+        some: {
+          userId: currentUser.id,
+        },
+      },
+    },
+  });
+
+  return res.status(200).json({
+    data: organizations,
     error: null,
   });
 };
