@@ -1,14 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { supabase } from "@/lib/supabase";
-import { sendSuccess } from "@/lib/response";
 
 const schemaSignIn = z.object({
   email: z.string(),
   password: z.string(),
 });
-
-const allowedMethods = ["POST"];
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,7 +18,7 @@ export default async function handler(
       case "POST":
         return await handlePOST(req, res);
       default:
-        res.setHeader("Allow", allowedMethods.join(", "));
+        res.setHeader("Allow", "POST");
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
@@ -57,5 +54,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error(error.message);
   }
 
-  return sendSuccess(res, 200, data);
+  return res.status(200).json({
+    data,
+    error: null,
+  });
 };

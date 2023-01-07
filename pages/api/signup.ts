@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/prisma";
 import { supabase } from "@/lib/supabase";
-import { sendSuccess } from "@/lib/response";
 
 const schemaSignUp = z.object({
   email: z.string().email(),
@@ -10,8 +9,6 @@ const schemaSignUp = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
 });
-
-const allowedMethods = ["POST"];
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,7 +21,7 @@ export default async function handler(
       case "POST":
         return await handlePOST(req, res);
       default:
-        res.setHeader("Allow", allowedMethods.join(", "));
+        res.setHeader("Allow", "POST");
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
@@ -79,5 +76,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  return sendSuccess(res, 201, newUser);
+  return res.status(201).json({
+    data: newUser,
+    error: null,
+  });
 };
