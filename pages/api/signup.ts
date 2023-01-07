@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 
 const schemaUser = z.object({
   email: z.string().email(),
@@ -56,12 +57,27 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
+  // Create a new user in Supabase
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) {
+    return res.status(400).json({
+      data: null,
+      error: {
+        message: error.message,
+      },
+    });
+  }
+
+  // Create a user in our database
   const newUser = await prisma.user.create({
     data: {
       email,
       firstName,
       lastName,
-      password: await hashPassword(password),
     },
   });
 
