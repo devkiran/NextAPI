@@ -1,10 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import micromatch from "micromatch";
-import { supabase } from "./lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 // Add API routes that don't require authentication
-const unAuthenticatedApiRoutes = ["/api/signin", "/api/signup"];
+const unAuthenticatedApiRoutes = ["/api/auth/signin", "/api/auth/signup"];
 
 export async function middleware(req: NextRequest) {
   const { headers, nextUrl } = req;

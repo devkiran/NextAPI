@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/prisma";
 import { addOrganizationMember } from "@/lib/server/organization";
+import { getCurrentUser } from "@/lib/supabase";
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,10 +55,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (existingOrganization) {
-    return res.status(400).json({
-      data: null,
-      error: { message: "Organization already exists" },
-    });
+    throw new Error("Organization already exists");
   }
 
   const newOrganization = await prisma.organization.create({
@@ -69,9 +67,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
+  const currentUser = await getCurrentUser(req);
+
   await addOrganizationMember({
     organizationId: newOrganization.id,
-    userId: 1,
+    userId: currentUser.id,
     role: "admin",
   });
 
