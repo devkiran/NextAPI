@@ -17,3 +17,18 @@ export const addOrganizationMember = async (params: {
     },
   });
 };
+
+export const getOrganizationWithMembers = async (slug: string) => {
+  return await prisma.organization.findUniqueOrThrow({
+    where: {
+      slug,
+    },
+    include: {
+      members: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+};
