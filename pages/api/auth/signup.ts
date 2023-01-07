@@ -57,16 +57,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error("An user with this email already exists.");
   }
 
-  // Create a new user in Supabase
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-  });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
   // Create a user in our database
   const newUser = await prisma.user.create({
     data: {
@@ -75,6 +65,21 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       lastName,
     },
   });
+
+  // Create a new user in Supabase
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        appUserId: newUser.id,
+      },
+    },
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
 
   return res.status(201).json({
     data: newUser,
