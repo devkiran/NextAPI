@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/prisma";
 import { supabase } from "@/lib/supabase";
+import { createRandomString } from "@/lib/string";
 
 const schemaSignUp = z.object({
   email: z.string().email(),
@@ -80,6 +81,20 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   if (error) {
     throw new Error(error.message);
   }
+
+  // Create a default team for the user
+  await prisma.team.create({
+    data: {
+      name: firstName,
+      slug: createRandomString(4),
+      members: {
+        create: {
+          userId: newUser.id,
+          role: "OWNER",
+        },
+      },
+    },
+  });
 
   return res.status(201).json({
     data: newUser,
