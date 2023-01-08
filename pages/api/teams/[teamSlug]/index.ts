@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getTeamWithMembers } from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/supabase";
+import { prisma } from "@/lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -63,6 +64,12 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!isAdmin) {
     throw new Error("You are not an admin of this team");
   }
+
+  await prisma.team.delete({
+    where: {
+      slug: teamSlug,
+    },
+  });
 
   return res.status(200).json({
     data: {},

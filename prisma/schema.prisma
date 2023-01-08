@@ -40,6 +40,6 @@ model TeamMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  team Team @relation(fields: [teamId], references: [id])
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id])
 }
