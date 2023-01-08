@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getOrganizationWithMembers } from "@/lib/server/organization";
+import { getTeamWithMembers } from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/supabase";
 
 export default async function handler(
@@ -28,40 +28,40 @@ export default async function handler(
   }
 }
 
-// Get the details of an organization
+// Get the details of an team
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { organizationSlug } = req.query as { organizationSlug: string };
+  const { teamSlug } = req.query as { teamSlug: string };
 
   const currentUser = await getCurrentUser(req);
-  const organization = await getOrganizationWithMembers(organizationSlug);
+  const team = await getTeamWithMembers(teamSlug);
 
-  const isMember = organization.members.some(
+  const isMember = team.members.some(
     (member) => member.userId === currentUser.id
   );
 
   if (!isMember) {
-    throw new Error("You are not a member of this organization");
+    throw new Error("You are not a member of this team");
   }
 
   return res.status(200).json({
-    data: organization,
+    data: team,
     error: null,
   });
 };
 
-// Delete the organization
+// Delete the team
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { organizationSlug } = req.query as { organizationSlug: string };
+  const { teamSlug } = req.query as { teamSlug: string };
 
   const currentUser = await getCurrentUser(req);
-  const organization = await getOrganizationWithMembers(organizationSlug);
+  const team = await getTeamWithMembers(teamSlug);
 
-  const isAdmin = organization.members.some(
+  const isAdmin = team.members.some(
     (member) => member.userId === currentUser.id && member.role === "admin"
   );
 
   if (!isAdmin) {
-    throw new Error("You are not an admin of this organization");
+    throw new Error("You are not an admin of this team");
   }
 
   return res.status(200).json({

@@ -18,29 +18,28 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  organizations OrganizationMember[]
+  teams TeamMember[]
 }
 
-model Organization {
+model Team {
   id        Int      @id @default(autoincrement())
   name      String
   slug      String   @unique
-  website   String?
   logo      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  members OrganizationMember[]
+  members TeamMember[]
 }
 
-model OrganizationMember {
-  id             Int      @id @default(autoincrement())
-  organizationId Int
-  userId         Int
-  role           String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+model TeamMember {
+  id        Int      @id @default(autoincrement())
+  teamId    Int
+  userId    Int
+  role      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  organization Organization @relation(fields: [organizationId], references: [id])
-  user         User         @relation(fields: [userId], references: [id])
+  team Team @relation(fields: [teamId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }

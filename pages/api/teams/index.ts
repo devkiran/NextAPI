@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/prisma";
-import { addOrganizationMember } from "@/lib/server/organization";
+import { addTeamMember } from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/supabase";
 
 export default async function handler(
@@ -30,12 +30,11 @@ export default async function handler(
   }
 }
 
-// Create a new organization
+// Create a new team
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const schema = z.object({
     name: z.string().min(1),
     slug: z.string().min(1),
-    website: z.string().optional(),
     logo: z.string().optional(),
   });
 
@@ -48,46 +47,45 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const { name, slug, website, logo } = response.data;
+  const { name, slug, logo } = response.data;
 
-  const existingOrganization = await prisma.organization.count({
+  const existingTeam = await prisma.team.count({
     where: {
       slug,
     },
   });
 
-  if (existingOrganization > 0) {
-    throw new Error("Organization already exists");
+  if (existingTeam > 0) {
+    throw new Error("Team already exists");
   }
 
-  const newOrganization = await prisma.organization.create({
+  const newTeam = await prisma.team.create({
     data: {
       name,
       slug,
-      website,
       logo,
     },
   });
 
   const currentUser = await getCurrentUser(req);
 
-  await addOrganizationMember({
-    organizationId: newOrganization.id,
+  await addTeamMember({
+    teamId: newTeam.id,
     userId: currentUser.id,
     role: "admin",
   });
 
   return res.status(201).json({
-    data: newOrganization,
+    data: newTeam,
     error: null,
   });
 };
 
-// Get all organizations for the current user
+// Get all teams for the current user
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const currentUser = await getCurrentUser(req);
 
-  const organizations = await prisma.organization.findMany({
+  const teams = await prisma.team.findMany({
     where: {
       members: {
         some: {
@@ -98,7 +96,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   return res.status(200).json({
-    data: organizations,
+    data: teams,
     error: null,
   });
 };
