@@ -1,6 +1,10 @@
 # Headless SaaS API
 
-This is a headless SaaS API that can be used to create a SaaS application.
+Create your next SaaS app with ease using the Headless SaaS API.
+
+The ultimate solution for developers looking to create a fully-functional SaaS application.
+
+Never write boilerplate backend code again and focus on what matters most: building your SaaS UI to attract and retain customers.
 
 It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma](https://www.prisma.io/) as the ORM.
 
