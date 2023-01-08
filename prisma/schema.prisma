@@ -18,7 +18,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  teams TeamMember[]
+  teams   TeamMember[]
+  invites Invitation[]
 }
 
 model Team {
@@ -30,6 +31,7 @@ model Team {
   updatedAt DateTime @updatedAt
 
   members TeamMember[]
+  invites Invitation[]
 }
 
 model TeamMember {
@@ -42,4 +44,18 @@ model TeamMember {
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id])
+}
+
+model Invitation {
+  id        Int      @id @default(autoincrement())
+  teamId    Int
+  email     String
+  role      String
+  InvitedBy Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [InvitedBy], references: [id], onDelete: Cascade)
 }
