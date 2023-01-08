@@ -11,6 +11,6 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 | POST   | /api/auth/signup | Sign up a new user       |
 | POST   | /api/auth/signin | Sign in an existing user |
 | POST   | /api/teams       | Create a new team        |
-| GET    | /api/teams       | Get all teams            |
+| GET    | /api/teams       | Get all teams for user   |
 | GET    | /api/teams/:id   | Get a team by id         |
 | DELETE | /api/teams/:id   | Delete a team by id      |
