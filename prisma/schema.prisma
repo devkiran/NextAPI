@@ -44,6 +44,8 @@ model TeamMember {
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id])
+
+  @@unique([teamId, userId])
 }
 
 model Invitation {
@@ -58,4 +60,6 @@ model Invitation {
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
   user User @relation(fields: [InvitedBy], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, email])
 }

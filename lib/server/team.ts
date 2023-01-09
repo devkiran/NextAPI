@@ -1,6 +1,5 @@
-import { prisma } from "@/lib/prisma";
-
-type Role = "admin" | "member";
+import { prisma } from "@/lib/server/prisma";
+import type { Role } from "../types";
 
 export const addTeamMember = async (params: {
   teamId: number;

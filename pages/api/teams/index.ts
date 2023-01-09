@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/server/prisma";
 import { addTeamMember } from "@/lib/server/team";
-import { getCurrentUser } from "@/lib/supabase";
+import { getCurrentUser } from "@/lib/server/user";
 
 export default async function handler(
   req: NextApiRequest,
@@ -72,7 +72,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   await addTeamMember({
     teamId: newTeam.id,
     userId: currentUser.id,
-    role: "admin",
+    role: "OWNER",
   });
 
   return res.status(201).json({

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { supabase } from "@/lib/supabase";
+import { prisma } from "@/lib/server/prisma";
 
 const schemaSignIn = z.object({
   email: z.string(),
@@ -43,6 +44,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { email, password } = response.data;
+
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      email,
+    },
+  });
 
   // Sign in the user in Supabase
   const { data, error } = await supabase.auth.signInWithPassword({

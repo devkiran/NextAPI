@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/server/prisma";
 import { supabase } from "@/lib/supabase";
 import { createRandomString } from "@/lib/string";
 

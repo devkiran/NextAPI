@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getTeamWithMembers } from "@/lib/server/team";
-import { getCurrentUser } from "@/lib/supabase";
-import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/server/user";
+import { prisma } from "@/lib/server/prisma";
 
 export default async function handler(
   req: NextApiRequest,

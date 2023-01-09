@@ -18,3 +18,4 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 | GET    | /api/teams       | Get all teams for user   |
 | GET    | /api/teams/:slug | Get a team               |
 | DELETE | /api/teams/:slug | Delete a team            |
+| POST   | /api/invites     | Create a new invite      |

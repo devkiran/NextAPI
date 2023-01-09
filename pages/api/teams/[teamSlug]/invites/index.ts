@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/supabase";
+import { prisma } from "@/lib/server/prisma";
+import { canInviteMember } from "@/lib/server/accessControls";
+import { getCurrentUser } from "@/lib/server/user";
 
 export default async function handler(
   req: NextApiRequest,
@@ -55,15 +56,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const currentUser = await getCurrentUser(req);
 
-  const isMember = await prisma.teamMember.count({
-    where: {
-      teamId: team.id,
-      userId: currentUser.id,
-    },
-  });
-
-  if (isMember === 0) {
-    throw new Error("You are not a member of this team");
+  if (!(await canInviteMember(currentUser, team))) {
+    throw new Error("You are not allowed to invite members to this team");
   }
 
   const existingInvitation = await prisma.invitation.count({

@@ -10,8 +10,8 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Get the current user
-export const getCurrentUser = async (req: NextApiRequest) => {
+// Get the Supabase user from the request
+export const getSupabaseUser = async (req: NextApiRequest) => {
   const token = req.headers.authorization?.replace("Bearer ", "");
 
   const {
