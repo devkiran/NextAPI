@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/server/prisma";
-import { canInviteMember } from "@/lib/server/accessControls";
+import { canCreateInvite, canReadInvite } from "@/lib/server/accessControls";
 import { getCurrentUser } from "@/lib/server/user";
+import { getTeam } from "@/lib/server/team";
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,8 +15,10 @@ export default async function handler(
     switch (method) {
       case "POST":
         return await handlePOST(req, res);
+      case "GET":
+        return await handleGET(req, res);
       default:
-        res.setHeader("Allow", "POST");
+        res.setHeader("Allow", "POST, GET");
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
@@ -46,17 +49,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const { email, role } = response.data;
-
-  const team = await prisma.team.findUniqueOrThrow({
-    where: {
-      slug: teamSlug,
-    },
-  });
-
   const currentUser = await getCurrentUser(req);
 
-  if (!(await canInviteMember(currentUser, team))) {
+  const team = await getTeam(teamSlug);
+
+  const { email, role } = response.data;
+
+  if (!(await canCreateInvite(currentUser, team))) {
     throw new Error("You are not allowed to invite members to this team");
   }
 
@@ -85,6 +84,34 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res.status(201).json({
     data: newInvitation,
+    error: null,
+  });
+};
+
+// Get all invitations for a team
+const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { teamSlug } = req.query as { teamSlug: string };
+
+  const team = await prisma.team.findUniqueOrThrow({
+    where: {
+      slug: teamSlug,
+    },
+  });
+
+  const currentUser = await getCurrentUser(req);
+
+  if (!(await canReadInvite(currentUser, team, null))) {
+    throw new Error("You are not allowed to see invitations for this team");
+  }
+
+  const invitations = await prisma.invitation.findMany({
+    where: {
+      teamId: team.id,
+    },
+  });
+
+  return res.status(200).json({
+    data: invitations,
     error: null,
   });
 };

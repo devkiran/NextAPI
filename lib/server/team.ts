@@ -31,3 +31,11 @@ export const getTeamWithMembers = async (slug: string) => {
     },
   });
 };
+
+export const getTeam = async (slug: string) => {
+  return await prisma.team.findUniqueOrThrow({
+    where: {
+      slug,
+    },
+  });
+};

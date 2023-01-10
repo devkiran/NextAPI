@@ -10,12 +10,15 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 
 ## API routes
 
-| Method | Path             | Description              |
-| ------ | ---------------- | ------------------------ |
-| POST   | /api/auth/signup | Sign up a new user       |
-| POST   | /api/auth/signin | Sign in an existing user |
-| POST   | /api/teams       | Create a new team        |
-| GET    | /api/teams       | Get all teams for user   |
-| GET    | /api/teams/:slug | Get a team               |
-| DELETE | /api/teams/:slug | Delete a team            |
-| POST   | /api/invites     | Create a new invite      |
+| Method | Path                               | Description              |
+| ------ | ---------------------------------- | ------------------------ |
+| POST   | /api/auth/signup                   | Sign up a new user       |
+| POST   | /api/auth/signin                   | Sign in an existing user |
+| POST   | /api/teams                         | Create a new team        |
+| GET    | /api/teams                         | Get all teams for user   |
+| GET    | /api/teams/:slug                   | Get a team               |
+| DELETE | /api/teams/:slug                   | Delete a team            |
+| POST   | /api/teams/:slug/invites           | Create a new invite      |
+| GET    | /api/teams/:slug/invites           | Get all invites for team |
+| GET    | /api/teams/:slug/invites/:inviteId | Get an invite            |
+| DELETE | /api/teams/:slug/invites/:inviteId | Delete an invite         |
