@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/server/prisma";
-import { canDeleteInvite, canReadInvite } from "@/lib/server/accessControls";
 import { getCurrentUser } from "@/lib/server/user";
 import { getTeam } from "@/lib/server/team";
+import { isTeamAdmin } from "@/lib/server/team";
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,18 +39,18 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   const currentUser = await getCurrentUser(req);
-
   const team = await getTeam(teamSlug);
+
+  if (!(await isTeamAdmin(currentUser, team))) {
+    throw new Error("You do not have permission to view this invitation");
+  }
 
   const invitation = await prisma.invitation.findFirstOrThrow({
     where: {
       id: parseInt(inviteId),
+      teamId: team.id,
     },
   });
-
-  if (!(await canReadInvite(currentUser, team, invitation))) {
-    throw new Error("You do not have permission to view this invitation");
-  }
 
   return res.status(200).json({
     data: invitation,
@@ -66,22 +66,22 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   const currentUser = await getCurrentUser(req);
-
   const team = await getTeam(teamSlug);
 
   const invitation = await prisma.invitation.findFirstOrThrow({
     where: {
       id: parseInt(inviteId),
+      teamId: team.id,
     },
   });
 
-  if (!(await canDeleteInvite(currentUser, team, invitation))) {
-    throw new Error("You do not have permission to delete this invitation");
+  if (!(await isTeamAdmin(currentUser, team))) {
+    throw new Error("You do not have permission to view this invitation");
   }
 
   await prisma.invitation.delete({
     where: {
-      id: parseInt(inviteId),
+      id: invitation.id,
     },
   });
 

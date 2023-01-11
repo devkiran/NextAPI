@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/server/prisma";
+import type { Team, User } from "@prisma/client";
 import type { Role } from "../types";
 
 export const addTeamMember = async (params: {
@@ -38,4 +39,26 @@ export const getTeam = async (slug: string) => {
       slug,
     },
   });
+};
+
+export const isTeamAdmin = async (user: User, team: Team) => {
+  const membership = await prisma.teamMember.findFirstOrThrow({
+    where: {
+      teamId: team.id,
+      userId: user.id,
+    },
+  });
+
+  return membership.role === "OWNER" || membership.role === "ADMIN";
+};
+
+export const isTeamOwner = async (user: User, team: Team) => {
+  const membership = await prisma.teamMember.findFirstOrThrow({
+    where: {
+      teamId: team.id,
+      userId: user.id,
+    },
+  });
+
+  return membership.role === "OWNER";
 };
