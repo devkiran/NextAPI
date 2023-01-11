@@ -4,6 +4,7 @@ import { prisma } from "@/lib/server/prisma";
 import { getCurrentUser } from "@/lib/server/user";
 import { getTeam } from "@/lib/server/team";
 import { isTeamAdmin } from "@/lib/server/team";
+import crypto from "crypto";
 
 export default async function handler(
   req: NextApiRequest,
@@ -69,6 +70,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       teamId: team.id,
       InvitedBy: currentUser.id,
       expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+      token: crypto.randomUUID(),
     },
   });
 
