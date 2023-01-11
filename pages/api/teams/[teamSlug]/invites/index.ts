@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/server/user";
 import { getTeam } from "@/lib/server/team";
 import { isTeamAdmin } from "@/lib/server/team";
 import crypto from "crypto";
+import { MemberRole } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,7 +39,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const schema = z.object({
     email: z.string().email(),
-    role: z.enum(["admin", "member"]),
+    role: z.nativeEnum(MemberRole),
   });
 
   const { email, role } = schema.parse(req.body);
@@ -63,10 +64,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
+  // const role1 = MemberRole[role.toUpperCase()];
+
   const newInvitation = await prisma.invitation.create({
     data: {
       email,
-      role: role.toUpperCase(),
+      role,
       teamId: team.id,
       InvitedBy: currentUser.id,
       expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days

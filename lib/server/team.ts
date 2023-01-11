@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/server/prisma";
-import type { Team, User } from "@prisma/client";
+import { MemberRole, Team, User } from "@prisma/client";
 import type { Role } from "../types";
 
 export const addTeamMember = async (params: {
@@ -49,7 +49,9 @@ export const isTeamAdmin = async (user: User, team: Team) => {
     },
   });
 
-  return membership.role === "OWNER" || membership.role === "ADMIN";
+  return (
+    membership.role === MemberRole.OWNER || membership.role === MemberRole.ADMIN
+  );
 };
 
 export const isTeamOwner = async (user: User, team: Team) => {
@@ -60,5 +62,5 @@ export const isTeamOwner = async (user: User, team: Team) => {
     },
   });
 
-  return membership.role === "OWNER";
+  return membership.role === MemberRole.OWNER;
 };

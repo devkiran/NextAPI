@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum MemberRole {
+  MEMBER
+  ADMIN
+  OWNER
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -38,7 +44,7 @@ model TeamMember {
   id        Int      @id @default(autoincrement())
   teamId    Int
   userId    Int
-  role      String
+  role      MemberRole
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -52,7 +58,7 @@ model Invitation {
   id        Int      @id @default(autoincrement())
   teamId    Int
   email     String
-  role      String
+  role      MemberRole
   InvitedBy Int
   token     String   @unique
   expiresAt DateTime
