@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import z from "zod";
 import { prisma } from "@/lib/server/prisma";
 import { getCurrentUser } from "@/lib/server/user";
 import { getTeam } from "@/lib/server/team";
