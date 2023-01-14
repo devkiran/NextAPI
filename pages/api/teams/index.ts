@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/server/prisma";
-import { addTeamMember } from "@/lib/server/team";
+import { addTeamMember, isTeamAdmin } from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/server/user";
 
 export default async function handler(
@@ -35,19 +35,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const schema = z.object({
     name: z.string().min(1),
     slug: z.string().min(1),
-    logo: z.string().optional(),
   });
 
-  const response = schema.safeParse(req.body);
-
-  if (!response.success) {
-    return res.status(400).json({
-      data: null,
-      error: response.error.format(),
-    });
-  }
-
-  const { name, slug, logo } = response.data;
+  const { name, slug } = schema.parse(req.body);
 
   const existingTeam = await prisma.team.count({
     where: {
@@ -63,7 +53,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     data: {
       name,
       slug,
-      logo,
     },
   });
 
