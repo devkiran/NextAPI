@@ -4,7 +4,12 @@ import micromatch from "micromatch";
 import { supabase } from "@/lib/supabase";
 
 // Add API routes that don't require authentication
-const unAuthenticatedApiRoutes = ["/api/auth/signin", "/api/auth/signup"];
+const unAuthenticatedApiRoutes = [
+  "/api/auth/signin",
+  "/api/auth/signup",
+  "/api/invites/*/accept",
+  "/api/invites/*/decline",
+];
 
 export async function middleware(req: NextRequest) {
   const { headers, nextUrl } = req;

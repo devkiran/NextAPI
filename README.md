@@ -23,3 +23,5 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 | GET    | /api/teams/:slug/invites           | Get all invites for team |
 | GET    | /api/teams/:slug/invites/:inviteId | Get an invite            |
 | DELETE | /api/teams/:slug/invites/:inviteId | Delete an invite         |
+
+- Before sending invite check if the user is already member of the team
