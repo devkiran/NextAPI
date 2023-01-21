@@ -1,3 +1,12 @@
+![NextAPI cover](./nextapi.png)
+
+<div align="center">
+  <strong>NextAPI</strong>
+</div>
+<div align="center">
+  A Next.js RESTful API Starter for building your next SaaS app.<br />Let NextAPI handle the heavy lifting for common SaaS features such as authentication, team management, invites and more.
+</div>
+
 # NextAPI
 
 A Next.js RESTful API Starter for building your next SaaS app.
@@ -45,3 +54,15 @@ NextAPI comes with a set of API routes that you can use within your React compon
 - When a new invite is created
 - When a user is added to a team
 - When a user is removed from a team
+
+## Getting started
+
+- Fork this repository
+- Clone your forked repository
+- Navigate to the project directory
+- Run `npm install` to install dependencies
+- Run `npm run dev` to start the development server
+
+## License
+
+MIT
