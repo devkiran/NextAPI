@@ -28,3 +28,14 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 | DELETE | /api/teams/:slug/members/:memberId | Delete a member          |
 | GET    | /api/me                            | Get current user         |
 | PUT    | /api/me                            | Update current user      |
+
+## Emails are sent for the following events
+
+- When a new user signs up
+- When a new invite is created
+- When a user is added to a team
+- When a user is removed from a team
+
+- Add an .env.example file
+- Add .env.local to .gitignore
+- Remove nextauth dependency

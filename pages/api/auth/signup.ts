@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/server/prisma";
 import { supabase } from "@/lib/supabase";
+import { welcomeEmail } from "@/lib/server/email/welcomeEmail";
 
 const schemaSignUp = z.object({
   email: z.string().email(),
@@ -80,6 +81,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   if (error) {
     throw new Error(error.message);
   }
+
+  // Send a welcome email
+  await welcomeEmail({ user: newUser });
 
   return res.status(201).json({
     data: newUser,
