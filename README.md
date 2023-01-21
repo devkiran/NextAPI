@@ -5,6 +5,7 @@
 </div>
 <div align="center">
   A Next.js RESTful API Starter for building your next SaaS app.
+</div>
 
 ## Introduction
 
