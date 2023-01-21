@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/lib/server/prisma";
-import { addTeamMember, isTeamAdmin } from "@/lib/server/team";
+import { addTeamMember } from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/server/user";
 
 export default async function handler(

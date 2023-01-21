@@ -26,3 +26,5 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 | GET    | /api/teams/:slug/members           | Get all members for team |
 | PUT    | /api/teams/:slug/members/:memberId | Update a member          |
 | DELETE | /api/teams/:slug/members/:memberId | Delete a member          |
+| GET    | /api/me                            | Get current user         |
+| PUT    | /api/me                            | Update current user      |
