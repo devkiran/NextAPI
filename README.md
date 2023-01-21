@@ -1,7 +1,7 @@
 ![NextAPI cover](./nextapi.png)
 
 <div align="center">
-  <strong>NextAPI</strong>
+  <h1><strong>NextAPI</strong></h1>
 </div>
 <div align="center">
   A Next.js RESTful API Starter for building your next SaaS app.<br />Let NextAPI handle the heavy lifting for common SaaS features such as authentication, team management, invites and more.
