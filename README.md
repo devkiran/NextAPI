@@ -1,14 +1,24 @@
-# Headless SaaS API
+# NextAPI
 
-Create your next SaaS app with ease using the Headless SaaS API.
+A Next.js RESTful API Starter for building your next SaaS app.
 
-The ultimate solution for developers looking to create a fully-functional SaaS application.
+Say goodbye to tedious backend boilerplate code and focus on what matters most - building user-friendly UI/UX that delight your customers.
 
-Never write boilerplate backend code again and focus on what matters most: building your SaaS UI to attract and retain customers.
+Let NextAPI handle the heavy lifting for common SaaS features such as authentication, team management, invites and more.
 
-It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma](https://www.prisma.io/) as the ORM.
+With its powerful combination of Next.js, Supabase, and Prisma, NextAPI provides the perfect foundation for creating scalable and feature-rich SaaS apps.
+
+## Built with
+
+- [Next.js](https://nextjs.org/)
+- [Supabase](https://supabase.io/)
+- [React.email](https://react.email/)
+- [Prisma](https://www.prisma.io/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 ## API routes
+
+NextAPI comes with a set of API routes that you can use within your React components.
 
 | Method | Path                               | Description              |
 | ------ | ---------------------------------- | ------------------------ |
@@ -35,11 +45,3 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 - When a new invite is created
 - When a user is added to a team
 - When a user is removed from a team
-
-## Built with
-
-- [Next.js](https://nextjs.org/)
-- [Supabase](https://supabase.io/)
-- [React.email](https://react.email/)
-- [Prisma](https://www.prisma.io/)
-- [TypeScript](https://www.typescriptlang.org/)
