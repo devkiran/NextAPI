@@ -13,7 +13,7 @@ Let NextAPI handle the heavy lifting for common SaaS features such as authentica
 
 Say goodbye to tedious backend boilerplate code and focus on what matters most - building user-friendly UI/UX that delight your customers.
 
-With its powerful combination of Next.js, Supabase, and Prisma, NextAPI provides the perfect foundation for creating scalable and feature-rich SaaS apps.
+With its powerful combination of Next.js, Supabase, and Prisma - NextAPI provides the perfect foundation for creating scalable and feature-rich SaaS apps.
 
 ## Built with
 
