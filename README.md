@@ -46,6 +46,8 @@ NextAPI comes with a set of API routes that you can use within your React compon
 | GET    | /api/me                            | Get current user         |
 | PUT    | /api/me                            | Update current user      |
 
+Postman documentation: https://documenter.getpostman.com/view/13376907/2s8ZDYWgZ1
+
 ## Emails are sent for the following events
 
 - When a new user signs up
