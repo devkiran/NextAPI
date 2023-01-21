@@ -27,7 +27,6 @@ export default async function handler(
     }
   } catch (error: any) {
     return res.status(400).json({
-      data: null,
       error: {
         message: error.message,
       },
@@ -41,7 +40,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!response.success) {
     return res.status(400).json({
-      data: null,
       error: response.error,
     });
   }
@@ -87,6 +85,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res.status(201).json({
     data: newUser,
-    error: null,
   });
 };

@@ -23,7 +23,6 @@ export default async function handler(
     }
   } catch (error: any) {
     return res.status(400).json({
-      data: null,
       error: {
         message: error.message,
       },
@@ -72,7 +71,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res.status(200).json({
     data: member,
-    error: null,
   });
 };
 
@@ -110,6 +108,5 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     data: {
       status: "success",
     },
-    error: null,
   });
 };
