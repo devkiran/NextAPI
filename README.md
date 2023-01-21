@@ -35,7 +35,3 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 - When a new invite is created
 - When a user is added to a team
 - When a user is removed from a team
-
-- Add an .env.example file
-- Add .env.local to .gitignore
-- Remove nextauth dependency
