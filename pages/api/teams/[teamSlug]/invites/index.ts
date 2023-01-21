@@ -64,8 +64,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  // const role1 = MemberRole[role.toUpperCase()];
-
   const newInvitation = await prisma.invitation.create({
     data: {
       email,
