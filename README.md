@@ -9,7 +9,7 @@
 
 ## Introduction
 
-Let NextAPI handle the heavy lifting for common SaaS features such as authentication, team management, invites and more.
+Let NextAPI handle the heavy lifting for common SaaS features such as authentication, team management, invites, subscriptions, and more.
 
 Say goodbye to tedious backend boilerplate code and focus on what matters most - building user-friendly UI/UX that delight your customers.
 
