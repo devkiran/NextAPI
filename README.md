@@ -35,3 +35,11 @@ It is built on top of [Next.js](https://nextjs.org/) API routes and uses [Prisma
 - When a new invite is created
 - When a user is added to a team
 - When a user is removed from a team
+
+## Built with
+
+- [Next.js](https://nextjs.org/)
+- [Supabase](https://supabase.io/)
+- [React.email](https://react.email/)
+- [Prisma](https://www.prisma.io/)
+- [TypeScript](https://www.typescriptlang.org/)
