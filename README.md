@@ -19,9 +19,9 @@ With its powerful combination of Next.js, Supabase, and Prisma - NextAPI provide
 
 - [Next.js](https://nextjs.org/)
 - [Supabase](https://supabase.io/)
-- [React.email](https://react.email/)
 - [Prisma](https://www.prisma.io/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [React.email](https://react.email/)
 
 ## API routes
 
@@ -63,4 +63,4 @@ NextAPI comes with a set of API routes that you can use within your React compon
 
 ## License
 
-MIT
+MIT License
