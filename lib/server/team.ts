@@ -64,3 +64,14 @@ export const isTeamOwner = async (user: User, team: Team) => {
 
   return membership.role === MemberRole.OWNER;
 };
+
+export const isTeamMember = async (user: User, team: Team) => {
+  const membership = await prisma.teamMember.findFirst({
+    where: {
+      teamId: team.id,
+      userId: user.id,
+    },
+  });
+
+  return membership !== null;
+};
