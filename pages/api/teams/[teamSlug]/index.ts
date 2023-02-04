@@ -1,7 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getTeamWithMembers, isTeamAdmin, getTeam } from "@/lib/server/team";
+import {
+  getTeamWithMembers,
+  isTeamAdmin,
+  getTeam,
+  updateTeam,
+  deleteTeam,
+} from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/server/user";
-import { prisma } from "@/lib/server/prisma";
 import z from "zod";
 
 export default async function handler(
@@ -65,27 +70,10 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { name, slug } = schema.parse(req.body);
 
-  const teamExists = await prisma.team.count({
-    where: {
-      slug,
-      id: {
-        not: team.id,
-      },
-    },
-  });
-
-  if (teamExists > 0) {
-    throw new Error("A team with this slug already exists");
-  }
-
-  const updatedTeam = await prisma.team.update({
-    where: {
-      id: team.id,
-    },
-    data: {
-      name,
-      slug,
-    },
+  const updatedTeam = await updateTeam({
+    name,
+    slug,
+    team,
   });
 
   return res.status(200).json({
@@ -104,11 +92,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error("You are not an admin of this team");
   }
 
-  await prisma.team.delete({
-    where: {
-      slug: teamSlug,
-    },
-  });
+  await deleteTeam(team);
 
   return res.status(200).json({
     data: {},

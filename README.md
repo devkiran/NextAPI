@@ -61,6 +61,7 @@ NextAPI comes with a set of API routes that you can use within your React compon
 - Clone your forked repository
 - Navigate to the project directory
 - Run `npm install` to install dependencies
+- Copy `.env.example` to `.env.local` and update the environment variables
 - Run `npm run dev` to start the development server
 
 ## License

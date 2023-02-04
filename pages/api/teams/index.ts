@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { prisma } from "@/lib/server/prisma";
-import { addTeamMember } from "@/lib/server/team";
+import { createTeam, getTeams } from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/server/user";
 
 export default async function handler(
@@ -38,29 +37,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { name, slug } = schema.parse(req.body);
 
-  const existingTeam = await prisma.team.count({
-    where: {
-      slug,
-    },
-  });
-
-  if (existingTeam > 0) {
-    throw new Error("Team already exists");
-  }
-
-  const newTeam = await prisma.team.create({
-    data: {
-      name,
-      slug,
-    },
-  });
-
-  const currentUser = await getCurrentUser(req);
-
-  await addTeamMember({
-    teamId: newTeam.id,
-    userId: currentUser.id,
-    role: "OWNER",
+  const newTeam = await createTeam({
+    name,
+    slug,
+    user: await getCurrentUser(req),
   });
 
   return res.status(201).json({
@@ -71,16 +51,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 // Get all teams for the current user
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const currentUser = await getCurrentUser(req);
-
-  const teams = await prisma.team.findMany({
-    where: {
-      members: {
-        some: {
-          userId: currentUser.id,
-        },
-      },
-    },
-  });
+  const teams = await getTeams(currentUser);
 
   return res.status(200).json({
     data: teams,
