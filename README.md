@@ -51,6 +51,8 @@ NextAPI comes with a set of API routes that you can use within your React compon
 | DELETE | /api/teams/:slug/members/:memberId | Delete a member          |
 | GET    | /api/me                            | Get current user         |
 | PUT    | /api/me                            | Update current user      |
+| POST   | /api/invites/:inviteId/accept      | Accept an invite         |
+| POST   | /api/invites/:inviteId/decline     | Reject an invite         |
 
 [API Documentation](https://documenter.getpostman.com/view/13376907/2s8ZDYWgZ1)
 
