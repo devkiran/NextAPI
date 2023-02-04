@@ -1,4 +1,4 @@
-![NextAPI cover](./nextapi.png)
+<!-- ![NextAPI cover](./nextapi.png) -->
 
 <div align="center">
   <h1><strong>NextAPI</strong></h1>
