@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/server/prisma";
-import { addTeamMember } from "@/lib/server/member";
+import { acceptInvitation } from "@/lib/server/invite";
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,41 +28,7 @@ export default async function handler(
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query as { token: string };
 
-  const invitation = await prisma.invitation.findUniqueOrThrow({
-    where: {
-      token,
-    },
-  });
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: invitation.email,
-    },
-  });
-
-  if (!user) {
-    throw new Error(
-      "An account with this email does not exist. Please sign up before accepting the invitation."
-    );
-  }
-
-  const team = await prisma.team.findUniqueOrThrow({
-    where: {
-      id: invitation.teamId,
-    },
-  });
-
-  await addTeamMember({
-    teamId: team.id,
-    userId: user.id,
-    role: invitation.role,
-  });
-
-  await prisma.invitation.delete({
-    where: {
-      id: invitation.id,
-    },
-  });
+  await acceptInvitation(token);
 
   return res.status(200).json({
     data: {

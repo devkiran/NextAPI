@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/server/prisma";
+import { declineInvitation } from "@/lib/server/invite";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,17 +28,7 @@ export default async function handler(
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query as { token: string };
 
-  const invitation = await prisma.invitation.findUniqueOrThrow({
-    where: {
-      token,
-    },
-  });
-
-  await prisma.invitation.delete({
-    where: {
-      id: invitation.id,
-    },
-  });
+  await declineInvitation(token);
 
   return res.status(200).json({
     data: {
