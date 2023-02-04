@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/server/prisma";
 import { MemberRole, Team, User } from "@prisma/client";
-import type { Role } from "../types";
+import { addTeamMember } from "./member";
 
 type CreateTeamParams = {
   name: string;
@@ -12,22 +12,6 @@ type UpdateTeamParams = {
   name: string;
   slug: string;
   team: Team;
-};
-
-export const addTeamMember = async (params: {
-  teamId: number;
-  userId: number;
-  role: Role;
-}) => {
-  const { teamId, userId, role } = params;
-
-  return await prisma.teamMember.create({
-    data: {
-      teamId,
-      userId,
-      role,
-    },
-  });
 };
 
 export const getTeamWithMembers = async (slug: string) => {

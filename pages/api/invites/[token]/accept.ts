@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/server/prisma";
-import { addTeamMember } from "@/lib/server/team";
+import { addTeamMember } from "@/lib/server/member";
 
 export default async function handler(
   req: NextApiRequest,

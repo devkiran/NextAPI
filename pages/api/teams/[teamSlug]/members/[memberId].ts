@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/server/user";
 import { getTeam, isTeamAdmin } from "@/lib/server/team";
 import z from "zod";
 import { MemberRole } from "@prisma/client";
+import { updateTeamMember } from "@/lib/server/member";
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,29 +45,15 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error("You do not have permission to access this team");
   }
 
-  const teamMember = await prisma.teamMember.findUnique({
-    where: {
-      id: parseInt(memberId),
-    },
-  });
-
-  if (!teamMember) {
-    throw new Error("Team member not found");
-  }
-
   const schema = z.object({
     role: z.nativeEnum(MemberRole),
   });
 
   const { role } = schema.parse(req.body);
 
-  const member = await prisma.teamMember.update({
-    where: {
-      id: parseInt(memberId),
-    },
-    data: {
-      role,
-    },
+  const member = await updateTeamMember({
+    memberId,
+    role,
   });
 
   return res.status(200).json({
