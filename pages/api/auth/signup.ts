@@ -1,15 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { prisma } from "@/lib/server/prisma";
-import { supabase } from "@/lib/supabase";
-import { sendWelcomeEmail } from "@/lib/server/email/sendEmail";
-
-const schemaSignUp = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-});
+import { createUserAccount } from "@/lib/server/auth";
+import { sendApiError } from "@/lib/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,17 +18,20 @@ export default async function handler(
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
-    return res.status(400).json({
-      error: {
-        message: error.message,
-      },
-    });
+    return sendApiError(res, error);
   }
 }
 
 // Create a new user account
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const response = schemaSignUp.safeParse(req.body);
+  const schema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8),
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+  });
+
+  const response = schema.safeParse(req.body);
 
   if (!response.success) {
     return res.status(400).json({
@@ -46,42 +41,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { email, firstName, lastName, password } = response.data;
 
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email: response.data.email,
-    },
-  });
-
-  if (existingUser) {
-    throw new Error("An user with this email already exists.");
-  }
-
-  // Create a user in our database
-  const newUser = await prisma.user.create({
-    data: {
-      email,
-      firstName,
-      lastName,
-    },
-  });
-
-  // Create a new user in Supabase
-  const { error } = await supabase.auth.signUp({
+  const newUser = await createUserAccount({
     email,
+    firstName,
+    lastName,
     password,
-    options: {
-      data: {
-        appUserId: newUser.id,
-      },
-    },
   });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  // Send a welcome email
-  await sendWelcomeEmail({ user: newUser });
 
   return res.status(201).json({
     data: newUser,

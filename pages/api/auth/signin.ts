@@ -1,12 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { supabase } from "@/lib/supabase";
-import { prisma } from "@/lib/server/prisma";
-
-const schemaSignIn = z.object({
-  email: z.string(),
-  password: z.string(),
-});
+import { signInUser } from "@/lib/server/auth";
+import { sendApiError } from "@/lib/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,17 +18,18 @@ export default async function handler(
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
-    return res.status(400).json({
-      error: {
-        message: error.message,
-      },
-    });
+    return sendApiError(res, error);
   }
 }
 
 // Sign in a user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const response = schemaSignIn.safeParse(req.body);
+  const schema = z.object({
+    email: z.string(),
+    password: z.string(),
+  });
+
+  const response = schema.safeParse(req.body);
 
   if (!response.success) {
     return res.status(400).json({
@@ -43,21 +39,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { email, password } = response.data;
 
-  await prisma.user.findUniqueOrThrow({
-    where: {
-      email,
-    },
-  });
-
-  // Sign in the user in Supabase
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const data = await signInUser({
     email,
     password,
   });
-
-  if (error) {
-    throw new Error(error.message);
-  }
 
   return res.status(200).json({
     data,
