@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "email": "email dev"
+    "email": "email dev",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@next/font": "13.1.1",
@@ -32,6 +33,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.30.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/micromatch": "^4.0.2",
     "@types/nodemailer": "^6.4.7",
