@@ -2,18 +2,6 @@ import { prisma } from "@/lib/server/prisma";
 import { supabase } from "@/lib/supabase";
 import { sendWelcomeEmail } from "@/lib/server/email/sendEmail";
 
-type SignUpParams = {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-};
-
-type SignInParams = {
-  email: string;
-  password: string;
-};
-
 // Create a new user account
 export const createUserAccount = async (params: SignUpParams) => {
   const { email, password, firstName, lastName } = params;
@@ -79,4 +67,16 @@ export const signInUser = async (params: SignInParams) => {
   }
 
   return data;
+};
+
+type SignUpParams = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+};
+
+type SignInParams = {
+  email: string;
+  password: string;
 };

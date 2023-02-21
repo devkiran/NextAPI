@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import z from "zod";
 import { createUserAccount } from "@/lib/server/auth";
 import { sendApiError } from "@/lib/error";
+import { signUpSchema } from "@/lib/schema";
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,22 +24,7 @@ export default async function handler(
 
 // Create a new user account
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const schema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
-  });
-
-  const response = schema.safeParse(req.body);
-
-  if (!response.success) {
-    return res.status(400).json({
-      error: response.error,
-    });
-  }
-
-  const { email, firstName, lastName, password } = response.data;
+  const { email, firstName, lastName, password } = signUpSchema.parse(req.body);
 
   const newUser = await createUserAccount({
     email,

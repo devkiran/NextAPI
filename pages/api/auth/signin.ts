@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import z from "zod";
 import { signInUser } from "@/lib/server/auth";
 import { sendApiError } from "@/lib/error";
+import { signInSchema } from "@/lib/schema";
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,20 +24,7 @@ export default async function handler(
 
 // Sign in a user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const schema = z.object({
-    email: z.string(),
-    password: z.string(),
-  });
-
-  const response = schema.safeParse(req.body);
-
-  if (!response.success) {
-    return res.status(400).json({
-      error: response.error,
-    });
-  }
-
-  const { email, password } = response.data;
+  const { email, password } = signInSchema.parse(req.body);
 
   const data = await signInUser({
     email,

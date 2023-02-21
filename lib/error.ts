@@ -1,21 +1,39 @@
-import { type NextApiResponse } from "next";
+import type { NextApiResponse } from "next";
+import { ZodError } from "zod";
 import { ApiError } from "next/dist/server/api-utils";
 
 export const getExceptionMessage = (error: unknown) => {
-  return error instanceof Error ? error.message : "An unknown error occurred";
+  if (error instanceof ZodError) {
+    return error.issues[0].message;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "An unknown error occurred";
 };
 
 export const getExceptionStatusCode = (error: unknown) => {
-  return error instanceof ApiError ? error.statusCode : 500;
+  if (error instanceof ZodError) {
+    return 400;
+  }
+
+  if (error instanceof ApiError) {
+    return error.statusCode;
+  }
+
+  return 500;
 };
 
 export const sendApiError = (res: NextApiResponse, error: unknown) => {
-  const statusCode = getExceptionStatusCode(error);
+  const status = getExceptionStatusCode(error);
   const message = getExceptionMessage(error);
 
-  return res.status(statusCode).json({
+  return res.status(status).json({
     error: {
       message,
+      status,
     },
   });
 };
