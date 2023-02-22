@@ -15,7 +15,7 @@ type UpdateTeamParams = {
 };
 
 export const getTeamWithMembers = async (slug: string) => {
-  return await prisma.team.findUniqueOrThrow({
+  const team = await prisma.team.findUniqueOrThrow({
     where: {
       slug,
     },
@@ -27,6 +27,19 @@ export const getTeamWithMembers = async (slug: string) => {
       },
     },
   });
+
+  const teamWithMembers = team.members.map(({ user, role }) => ({
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    role,
+  }));
+
+  return {
+    ...team,
+    members: teamWithMembers,
+  };
 };
 
 export const getTeam = async (slug: string) => {
@@ -150,4 +163,30 @@ export const deleteTeam = async (team: Team) => {
       slug: team.slug,
     },
   });
+};
+
+// Get team members
+export const getTeamMembers = async (team: Team) => {
+  const members = await prisma.teamMember.findMany({
+    where: {
+      teamId: team.id,
+    },
+    select: {
+      id: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+      user: true,
+    },
+  });
+
+  return members.map(({ user, role }) => ({
+    id: user.id,
+    role,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  }));
 };

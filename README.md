@@ -70,6 +70,7 @@ NextAPI comes with a set of API routes that you can use within your React compon
 - Navigate to the project directory
 - Run `npm install` to install dependencies
 - Copy `.env.example` to `.env.local` and update the environment variables
+- Run `npx prisma db push` to setup the database tables
 - Run `npm run dev` to start the development server
 
 ## License

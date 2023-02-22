@@ -1,10 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/server/prisma";
 import { getCurrentUser } from "@/lib/server/user";
 import { getTeam, isTeamAdmin } from "@/lib/server/team";
-import z from "zod";
-import { MemberRole } from "@prisma/client";
-import { updateTeamMember } from "@/lib/server/member";
+import { removeTeamMember, updateTeamMember } from "@/lib/server/member";
+import { updateTeamMemberSchema } from "@/lib/schema";
+import { sendApiError } from "@/lib/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,11 +22,7 @@ export default async function handler(
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
-    return res.status(400).json({
-      error: {
-        message: error.message,
-      },
-    });
+    return sendApiError(res, error);
   }
 }
 
@@ -45,11 +40,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error("You do not have permission to access this team");
   }
 
-  const schema = z.object({
-    role: z.nativeEnum(MemberRole),
-  });
-
-  const { role } = schema.parse(req.body);
+  const { role } = updateTeamMemberSchema.parse(req.body);
 
   const member = await updateTeamMember({
     memberId,
@@ -68,28 +59,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     memberId: string;
   };
 
-  const currentUser = await getCurrentUser(req);
-  const team = await getTeam(teamSlug);
-
-  if (!(await isTeamAdmin(currentUser, team))) {
-    throw new Error("You do not have permission to access this team");
-  }
-
-  const teamMember = await prisma.teamMember.findUnique({
-    where: {
-      id: parseInt(memberId),
-    },
-  });
-
-  if (!teamMember) {
-    throw new Error("Team member not found");
-  }
-
-  await prisma.teamMember.delete({
-    where: {
-      id: parseInt(memberId),
-    },
-  });
+  await removeTeamMember({ teamSlug, memberId }, await getCurrentUser(req));
 
   return res.status(200).json({
     data: {

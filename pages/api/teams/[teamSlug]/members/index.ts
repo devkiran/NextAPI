@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/server/prisma";
 import { getCurrentUser } from "@/lib/server/user";
 import { getTeam } from "@/lib/server/team";
-import { isTeamMember } from "@/lib/server/team";
+import { isTeamMember, getTeamMembers } from "@/lib/server/team";
+import { sendApiError } from "@/lib/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,11 +19,7 @@ export default async function handler(
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
-    return res.status(400).json({
-      error: {
-        message: error.message,
-      },
-    });
+    return sendApiError(res, error);
   }
 }
 
@@ -40,24 +36,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error("You do not have permission to access this team");
   }
 
-  const members = await prisma.teamMember.findMany({
-    where: {
-      teamId: team.id,
-    },
-    select: {
-      id: true,
-      role: true,
-      createdAt: true,
-      updatedAt: true,
-      user: {
-        select: {
-          firstName: true,
-          lastName: true,
-          email: true,
-        },
-      },
-    },
-  });
+  const members = await getTeamMembers(team);
 
   return res.status(200).json({
     data: members,

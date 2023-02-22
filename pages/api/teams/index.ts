@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import z from "zod";
 import { createTeam, getTeams } from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/server/user";
+import { sendApiError } from "@/lib/error";
+import { createTeamSchema } from "@/lib/schema";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,31 +21,22 @@ export default async function handler(
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
-    return res.status(400).json({
-      error: {
-        message: error.message,
-      },
-    });
+    return sendApiError(res, error);
   }
 }
 
 // Create a new team
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const schema = z.object({
-    name: z.string().min(1),
-    slug: z.string().min(1),
-  });
+  const { name, slug } = createTeamSchema.parse(req.body);
 
-  const { name, slug } = schema.parse(req.body);
-
-  const newTeam = await createTeam({
+  const team = await createTeam({
     name,
     slug,
     user: await getCurrentUser(req),
   });
 
   return res.status(201).json({
-    data: newTeam,
+    data: team,
   });
 };
 

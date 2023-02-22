@@ -7,7 +7,8 @@ import {
   deleteTeam,
 } from "@/lib/server/team";
 import { getCurrentUser } from "@/lib/server/user";
-import z from "zod";
+import { sendApiError } from "@/lib/error";
+import { updateTeamSchema } from "@/lib/schema";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,11 +29,7 @@ export default async function handler(
         throw new Error(`Method ${method} Not Allowed`);
     }
   } catch (error: any) {
-    return res.status(400).json({
-      error: {
-        message: error.message,
-      },
-    });
+    return sendApiError(res, error);
   }
 }
 
@@ -63,12 +60,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error("You are not an admin of this team");
   }
 
-  const schema = z.object({
-    name: z.string().min(1),
-    slug: z.string().min(1),
-  });
-
-  const { name, slug } = schema.parse(req.body);
+  const { name, slug } = updateTeamSchema.parse(req.body);
 
   const updatedTeam = await updateTeam({
     name,

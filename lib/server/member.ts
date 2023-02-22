@@ -1,10 +1,17 @@
 import { prisma } from "@/lib/server/prisma";
+import { User } from "@prisma/client";
 import type { Role } from "../types";
+import { getTeam, isTeamAdmin } from "./team";
 
 type AddTeamMemberParams = {
   teamId: number;
   userId: number;
   role: Role;
+};
+
+type RemoveTeamMemberParams = {
+  teamSlug: string;
+  memberId: string;
 };
 
 // Add a user to a team with a specific role
@@ -43,6 +50,36 @@ export const updateTeamMember = async (params: {
     },
     data: {
       role,
+    },
+  });
+};
+
+// Remove a user from a team
+export const removeTeamMember = async (
+  params: RemoveTeamMemberParams,
+  currentUser: User
+) => {
+  const { teamSlug, memberId } = params;
+
+  const team = await getTeam(teamSlug);
+
+  if (!(await isTeamAdmin(currentUser, team))) {
+    throw new Error("You do not have permission to access this team");
+  }
+
+  const teamMember = await prisma.teamMember.findUnique({
+    where: {
+      id: parseInt(memberId),
+    },
+  });
+
+  if (!teamMember) {
+    throw new Error("Team member not found");
+  }
+
+  await prisma.teamMember.delete({
+    where: {
+      id: parseInt(memberId),
     },
   });
 };
