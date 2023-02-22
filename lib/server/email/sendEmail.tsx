@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
 import { render } from "@react-email/render";
-import WelcomeEmail from "emails/welcome";
 import type { User } from "@prisma/client";
 import env from "../env";
+import Welcome from "emails/Welcome";
 
 interface EmailData {
   to: string;
@@ -43,7 +43,7 @@ export const sendEmail = async (data: EmailData) => {
 
 // Send welcome email to new user
 export const sendWelcomeEmail = async ({ user }: { user: User }) => {
-  const emailHtml = render(<WelcomeEmail />);
+  const emailHtml = render(<Welcome />);
 
   await sendEmail({
     to: user.email,

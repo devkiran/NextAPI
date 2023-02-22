@@ -33,14 +33,14 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     memberId: string;
   };
 
+  const { role } = updateTeamMemberSchema.parse(req.body);
+
   const currentUser = await getCurrentUser(req);
   const team = await getTeam(teamSlug);
 
   if (!(await isTeamAdmin(currentUser, team))) {
     throw new Error("You do not have permission to access this team");
   }
-
-  const { role } = updateTeamMemberSchema.parse(req.body);
 
   const member = await updateTeamMember({
     memberId,
@@ -59,7 +59,14 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     memberId: string;
   };
 
-  await removeTeamMember({ teamSlug, memberId }, await getCurrentUser(req));
+  const currentUser = await getCurrentUser(req);
+  const team = await getTeam(teamSlug);
+
+  if (!(await isTeamAdmin(currentUser, team))) {
+    throw new Error("You do not have permission to access this team");
+  }
+
+  await removeTeamMember({ memberId });
 
   return res.status(200).json({
     data: {
