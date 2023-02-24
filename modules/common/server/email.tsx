@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import { render } from "@react-email/render";
 import type { User } from "@prisma/client";
-import env from "../env";
+import env from "./env";
 import Welcome from "emails/Welcome";
 
 interface EmailData {

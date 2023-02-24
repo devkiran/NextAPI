@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { prisma } from "@/lib/server/prisma";
-import { getCurrentUser } from "@/lib/server/user";
+import { prisma } from "@/modules/common/server/prisma";
+import { getCurrentUser } from "@/modules/common/server/auth";
 
 export default async function handler(
   req: NextApiRequest,

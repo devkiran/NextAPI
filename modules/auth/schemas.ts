@@ -1,5 +1,4 @@
 import z from "zod";
-import { MemberRole } from "@prisma/client";
 
 export const signUpSchema = z.object({
   email: z.string().email({
@@ -23,26 +22,4 @@ export const signInSchema = z.object({
   password: z.string().min(1, {
     message: "Password is required",
   }),
-});
-
-export const createTeamSchema = z.object({
-  name: z.string().min(1, {
-    message: "Team name is required",
-  }),
-  slug: z.string().min(1, {
-    message: "Team slug is required",
-  }),
-});
-
-export const updateTeamSchema = z.object({
-  name: z.string().min(1, {
-    message: "Team name is required",
-  }),
-  slug: z.string().min(1, {
-    message: "Team slug is required",
-  }),
-});
-
-export const updateTeamMemberSchema = z.object({
-  role: z.nativeEnum(MemberRole),
 });

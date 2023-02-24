@@ -1,14 +1,31 @@
-import { prisma } from "@/lib/server/prisma";
-import type { Role } from "../types";
+import { Team } from "@prisma/client";
+import { prisma } from "@/modules/common/server/prisma";
+import { AddTeamMemberParams, RemoveTeamMemberParams, Role } from "../types";
 
-type AddTeamMemberParams = {
-  teamId: number;
-  userId: number;
-  role: Role;
-};
+// Get team members
+export const getTeamMembers = async (team: Team) => {
+  const members = await prisma.teamMember.findMany({
+    where: {
+      teamId: team.id,
+    },
+    select: {
+      id: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+      user: true,
+    },
+  });
 
-type RemoveTeamMemberParams = {
-  memberId: string;
+  return members.map(({ user, role }) => ({
+    id: user.id,
+    role,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  }));
 };
 
 // Add a user to a team with a specific role

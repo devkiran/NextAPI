@@ -1,10 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
-import { prisma } from "@/lib/server/prisma";
-import { getCurrentUser } from "@/lib/server/user";
-import { getTeam } from "@/lib/server/team";
-import { isTeamAdmin } from "@/lib/server/team";
 import crypto from "crypto";
+import { prisma } from "@/modules/common/server/prisma";
+import { getCurrentUser } from "@/modules/common/server/auth";
+import { getTeam, isTeamAdmin } from "@/modules/teams/server";
 import { MemberRole } from "@prisma/client";
 
 export default async function handler(

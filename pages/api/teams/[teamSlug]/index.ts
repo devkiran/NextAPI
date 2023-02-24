@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getCurrentUser } from "@/modules/common/server/auth";
+import { sendApiError } from "@/modules/common/server/error";
+import { updateTeamSchema } from "@/modules/teams/schemas";
 import {
   getTeamWithMembers,
   isTeamAdmin,
   getTeam,
   updateTeam,
   deleteTeam,
-} from "@/lib/server/team";
-import { getCurrentUser } from "@/lib/server/user";
-import { sendApiError } from "@/lib/error";
-import { updateTeamSchema } from "@/lib/schema";
+} from "@/modules/teams/server";
 
 export default async function handler(
   req: NextApiRequest,

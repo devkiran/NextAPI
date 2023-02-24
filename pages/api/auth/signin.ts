@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { signInUser } from "@/lib/server/auth";
-import { sendApiError } from "@/lib/error";
-import { signInSchema } from "@/lib/schema";
+import {
+  sendApiError,
+  throwMethodNotAllowed,
+} from "@/modules/common/server/error";
+import { signInUser } from "@/modules/auth/server";
+import { signInSchema } from "@/modules/auth/schemas";
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,8 +17,7 @@ export default async function handler(
       case "POST":
         return await handlePOST(req, res);
       default:
-        res.setHeader("Allow", "POST");
-        throw new Error(`Method ${method} Not Allowed`);
+        throwMethodNotAllowed(res, method, ["POST"]);
     }
   } catch (error: any) {
     return sendApiError(res, error);

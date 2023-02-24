@@ -1,18 +1,7 @@
-import { prisma } from "@/lib/server/prisma";
+import { prisma } from "@/modules/common/server/prisma";
 import { MemberRole, Team, User } from "@prisma/client";
+import { CreateTeamParams, UpdateTeamParams } from "../types";
 import { addTeamMember } from "./member";
-
-type CreateTeamParams = {
-  name: string;
-  slug: string;
-  user: User;
-};
-
-type UpdateTeamParams = {
-  name: string;
-  slug: string;
-  team: Team;
-};
 
 export const getTeamWithMembers = async (slug: string) => {
   const team = await prisma.team.findUniqueOrThrow({
@@ -163,30 +152,4 @@ export const deleteTeam = async (team: Team) => {
       slug: team.slug,
     },
   });
-};
-
-// Get team members
-export const getTeamMembers = async (team: Team) => {
-  const members = await prisma.teamMember.findMany({
-    where: {
-      teamId: team.id,
-    },
-    select: {
-      id: true,
-      role: true,
-      createdAt: true,
-      updatedAt: true,
-      user: true,
-    },
-  });
-
-  return members.map(({ user, role }) => ({
-    id: user.id,
-    role,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  }));
 };
