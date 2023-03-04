@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getCurrentUser } from "@/modules/common/server/auth";
 import { sendApiError } from "@/modules/common/server/error";
-import { createTeamSchema } from "@/modules/teams/schemas";
-import { createTeam, getTeams } from "@/modules/teams/server";
+import { createTeam, getTeams, createTeamSchema } from "@/modules/teams";
 
 export default async function handler(
   req: NextApiRequest,

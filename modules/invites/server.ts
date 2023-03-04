@@ -1,5 +1,5 @@
 import { prisma } from "@/modules/common/server/prisma";
-import { addTeamMember } from "@/modules/teams/server";
+import { addTeamMember } from "@/modules/teams";
 
 // Accept the invitation
 export const acceptInvitation = async (token: string) => {

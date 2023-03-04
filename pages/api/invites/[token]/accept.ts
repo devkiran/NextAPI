@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { acceptInvitation } from "@/modules/invites/server";
+import { acceptInvitation } from "@/modules/invites";
 
 export default async function handler(
   req: NextApiRequest,

@@ -1,6 +1,6 @@
 import { prisma } from "./prisma";
 import type { NextApiRequest } from "next";
-import { getSupabaseUser } from "../../../lib/supabase";
+import { getSupabaseUser } from "./supabase";
 
 // Get the current user from the request
 export const getCurrentUser = async (req: NextApiRequest) => {

@@ -1,5 +1,5 @@
 import { prisma } from "@/modules/common/server/prisma";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/modules/common/server/supabase";
 import { sendWelcomeEmail } from "@/modules/common/server/email";
 import { SignUpParams, SignInParams } from "./types";
 

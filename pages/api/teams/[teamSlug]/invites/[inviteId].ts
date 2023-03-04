@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/modules/common/server/prisma";
 import { getCurrentUser } from "@/modules/common/server/auth";
-import { getTeam, isTeamAdmin } from "@/modules/teams/server";
+import { getTeam, isTeamAdmin } from "@/modules/teams";
 
 export default async function handler(
   req: NextApiRequest,

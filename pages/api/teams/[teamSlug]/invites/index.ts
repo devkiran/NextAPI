@@ -3,7 +3,7 @@ import z from "zod";
 import crypto from "crypto";
 import { prisma } from "@/modules/common/server/prisma";
 import { getCurrentUser } from "@/modules/common/server/auth";
-import { getTeam, isTeamAdmin } from "@/modules/teams/server";
+import { getTeam, isTeamAdmin } from "@/modules/teams";
 import { MemberRole } from "@prisma/client";
 
 export default async function handler(

@@ -3,8 +3,7 @@ import {
   sendApiError,
   throwMethodNotAllowed,
 } from "@/modules/common/server/error";
-import { createUserAccount } from "@/modules/auth/server";
-import { signUpSchema } from "@/modules/auth/schemas";
+import { createUserAccount, signUpSchema } from "@/modules/auth";
 
 export default async function handler(
   req: NextApiRequest,
