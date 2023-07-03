@@ -1,14 +1,3 @@
-<!-- ![NextAPI cover](./nextapi.png) -->
-
-<!--
-<div align="center">
-  <h1><strong>NextAPI</strong></h1>
-</div>
-<div align="center">
-  A Next.js RESTful API Starter for building your next SaaS app.
-</div>
- -->
-
 # NextAPI
 
 <p>
@@ -17,7 +6,7 @@
     <a href="https://github.com/devkiran/NextAPI/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/devkiran/NextAPI" alt="License"></a>
 </p>
 
-A Next.js RESTful API Starter for building your next SaaS app.
+A Next.js RESTful API Starter for building SaaS app.
 
 ## Introduction
 
@@ -76,7 +65,7 @@ NextAPI comes with a set of API routes that you can use within your React compon
 - Navigate to the project directory
 - Run `npm install` to install dependencies
 - Copy `.env.example` to `.env.local` and update the environment variables
-- Run `npx prisma db push` to setup the database tables
+- Run `npx prisma migrate deploy` to apply migrations
 - Run `npm run dev` to start the development server
 
 ## License
