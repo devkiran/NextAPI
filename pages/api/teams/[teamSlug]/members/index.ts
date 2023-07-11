@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getCurrentUser } from "@/modules/common/server/auth";
 import { sendApiError } from "@/modules/common/server/error";
 import { getTeam, isTeamMember, getTeamMembers } from "@/modules/teams";
+import { throwMethodNotAllowed } from "@/modules/common/server/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,13 +13,13 @@ export default async function handler(
   try {
     switch (method) {
       case "GET":
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       default:
-        res.setHeader("Allow", "GET");
-        throw new Error(`Method ${method} Not Allowed`);
+        throwMethodNotAllowed(res, method, ["GET"]);
     }
   } catch (error: any) {
-    return sendApiError(res, error);
+    sendApiError(res, error);
   }
 }
 
@@ -37,7 +38,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const members = await getTeamMembers(team);
 
-  return res.status(200).json({
+  res.status(200).json({
     data: members,
   });
 };

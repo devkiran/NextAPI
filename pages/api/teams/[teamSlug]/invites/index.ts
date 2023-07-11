@@ -5,6 +5,7 @@ import { prisma } from "@/modules/common/server/prisma";
 import { getCurrentUser } from "@/modules/common/server/auth";
 import { getTeam, isTeamAdmin } from "@/modules/teams";
 import { MemberRole } from "@prisma/client";
+import { throwMethodNotAllowed } from "@/modules/common/server/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,15 +16,16 @@ export default async function handler(
   try {
     switch (method) {
       case "POST":
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       case "GET":
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       default:
-        res.setHeader("Allow", "POST, GET");
-        throw new Error(`Method ${method} Not Allowed`);
+        throwMethodNotAllowed(res, method, ["POST", "GET"]);
     }
   } catch (error: any) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         message: error.message,
       },
@@ -73,7 +75,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  return res.status(201).json({
+  res.status(201).json({
     data: newInvitation,
   });
 };
@@ -95,7 +97,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     data: invitations,
   });
 };

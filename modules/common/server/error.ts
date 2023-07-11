@@ -30,7 +30,7 @@ export const sendApiError = (res: NextApiResponse, error: unknown) => {
   const status = getExceptionStatusCode(error);
   const message = getExceptionMessage(error);
 
-  return res.status(status).json({
+  res.status(status).json({
     error: {
       message,
       status,

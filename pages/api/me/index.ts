@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 import { prisma } from "@/modules/common/server/prisma";
 import { getCurrentUser } from "@/modules/common/server/auth";
+import { throwMethodNotAllowed } from "@/modules/common/server/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,15 +13,16 @@ export default async function handler(
   try {
     switch (method) {
       case "GET":
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       case "PUT":
-        return await handlePUT(req, res);
+        await handlePUT(req, res);
+        break;
       default:
-        res.setHeader("Allow", "GET, PUT");
-        throw new Error(`Method ${method} Not Allowed`);
+        throwMethodNotAllowed(res, method, ["GET", "PUT"]);
     }
   } catch (error: any) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         message: error.message,
       },
@@ -32,7 +34,7 @@ export default async function handler(
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const currentUser = await getCurrentUser(req);
 
-  return res.status(200).json({
+  res.status(200).json({
     data: currentUser,
   });
 };
@@ -58,7 +60,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     data: updatedUser,
   });
 };

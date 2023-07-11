@@ -14,12 +14,13 @@ export default async function handler(
   try {
     switch (method) {
       case "POST":
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       default:
         throwMethodNotAllowed(res, method, ["POST"]);
     }
   } catch (error: any) {
-    return sendApiError(res, error);
+    sendApiError(res, error);
   }
 }
 
@@ -32,7 +33,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     password,
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     data,
   });
 };

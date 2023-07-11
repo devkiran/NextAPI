@@ -9,6 +9,7 @@ import {
   deleteTeam,
   updateTeamSchema,
 } from "@/modules/teams";
+import { throwMethodNotAllowed } from "@/modules/common/server/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,17 +20,19 @@ export default async function handler(
   try {
     switch (method) {
       case "GET":
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       case "PUT":
-        return await handlePUT(req, res);
+        await handlePUT(req, res);
+        break;
       case "DELETE":
-        return await handleDELETE(req, res);
+        await handleDELETE(req, res);
+        break;
       default:
-        res.setHeader("Allow", "GET, PUT, DELETE");
-        throw new Error(`Method ${method} Not Allowed`);
+        throwMethodNotAllowed(res, method, ["GET", "PUT", "DELETE"]);
     }
   } catch (error: any) {
-    return sendApiError(res, error);
+    sendApiError(res, error);
   }
 }
 
@@ -44,7 +47,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error("You are not an admin of this team");
   }
 
-  return res.status(200).json({
+  res.status(200).json({
     data: team,
   });
 };
@@ -68,7 +71,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     data: updatedTeam,
   });
 };
@@ -86,7 +89,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteTeam(team);
 
-  return res.status(200).json({
+  res.status(200).json({
     data: {},
   });
 };

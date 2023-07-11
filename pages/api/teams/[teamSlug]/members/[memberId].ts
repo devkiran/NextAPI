@@ -8,6 +8,7 @@ import {
   isTeamAdmin,
   updateTeamMemberSchema,
 } from "@/modules/teams";
+import { throwMethodNotAllowed } from "@/modules/common/server/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,15 +19,16 @@ export default async function handler(
   try {
     switch (method) {
       case "PUT":
-        return await handlePUT(req, res);
+        await handlePUT(req, res);
+        break;
       case "DELETE":
-        return await handleDELETE(req, res);
+        await handleDELETE(req, res);
+        break;
       default:
-        res.setHeader("Allow", "PUT, DELETE");
-        throw new Error(`Method ${method} Not Allowed`);
+        throwMethodNotAllowed(res, method, ["PUT", "DELETE"]);
     }
   } catch (error: any) {
-    return sendApiError(res, error);
+    sendApiError(res, error);
   }
 }
 
@@ -51,7 +53,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     role,
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     data: member,
   });
 };
@@ -72,7 +74,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await removeTeamMember({ memberId });
 
-  return res.status(200).json({
+  res.status(200).json({
     data: {
       status: "success",
     },

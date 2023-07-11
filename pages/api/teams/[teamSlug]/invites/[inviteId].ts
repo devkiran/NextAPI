@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/modules/common/server/prisma";
 import { getCurrentUser } from "@/modules/common/server/auth";
 import { getTeam, isTeamAdmin } from "@/modules/teams";
+import { throwMethodNotAllowed } from "@/modules/common/server/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,15 +13,16 @@ export default async function handler(
   try {
     switch (method) {
       case "GET":
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       case "DELETE":
-        return await handleDELETE(req, res);
+        await handleDELETE(req, res);
+        break;
       default:
-        res.setHeader("Allow", "GET, DELETE");
-        throw new Error(`Method ${method} Not Allowed`);
+        throwMethodNotAllowed(res, method, ["GET", "DELETE"]);
     }
   } catch (error: any) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         message: error.message,
       },
@@ -49,7 +51,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     data: invitation,
   });
 };
@@ -81,7 +83,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     data: {},
   });
 };

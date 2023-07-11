@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { declineInvitation } from "@/modules/invites";
+import { throwMethodNotAllowed } from "@/modules/common/server/error";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,13 +11,13 @@ export default async function handler(
   try {
     switch (method) {
       case "POST":
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       default:
-        res.setHeader("Allow", "POST");
-        throw new Error(`Method ${method} Not Allowed`);
+        throwMethodNotAllowed(res, method, ["POST"]);
     }
   } catch (error: any) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         message: error.message,
       },
@@ -30,7 +31,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await declineInvitation(token);
 
-  return res.status(200).json({
+  res.status(200).json({
     data: {
       success: true,
     },
