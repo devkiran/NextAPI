@@ -16,6 +16,8 @@ Say goodbye to tedious backend boilerplate code and focus on what matters most -
 
 With its powerful combination of Next.js, Supabase, and Prisma - NextAPI provides the perfect foundation for creating scalable and feature-rich SaaS apps.
 
+[API Documentation](https://saas-api.dev/introduction)
+
 ## Built with
 
 - [Next.js](https://nextjs.org/)
@@ -48,8 +50,6 @@ NextAPI comes with a set of API routes that you can use within your React compon
 | PUT    | /api/me                            | Update current user      |
 | POST   | /api/invites/:inviteId/accept      | Accept an invite         |
 | POST   | /api/invites/:inviteId/decline     | Reject an invite         |
-
-[API Documentation](https://documenter.getpostman.com/view/13376907/2s8ZDYWgZ1)
 
 ## Emails are sent for the following events
 
